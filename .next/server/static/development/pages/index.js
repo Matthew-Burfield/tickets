@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -243,6 +243,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(immer__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var nanoid__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! nanoid */ "nanoid");
 /* harmony import */ var nanoid__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(nanoid__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _aws_amplify_api__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @aws-amplify/api */ "@aws-amplify/api");
+/* harmony import */ var _aws_amplify_api__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_aws_amplify_api__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _src_graphql_mutations__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../src/graphql/mutations */ "./src/graphql/mutations.ts");
+/* harmony import */ var _src_aws_exports__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../src/aws-exports */ "./src/aws-exports.js");
 
 
 
@@ -262,6 +266,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
+
+
+
+_aws_amplify_api__WEBPACK_IMPORTED_MODULE_12___default.a.configure(_src_aws_exports__WEBPACK_IMPORTED_MODULE_14__["default"]);
+const MY_ID = nanoid__WEBPACK_IMPORTED_MODULE_11___default()();
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -310,20 +319,35 @@ const App = () => {
     todos: []
   });
 
-  const add = name => {
+  const add = async name => {
+    const todo = {
+      id: nanoid__WEBPACK_IMPORTED_MODULE_11___default()(),
+      name,
+      completed: false,
+      createdAt: `${_babel_runtime_corejs2_core_js_date_now__WEBPACK_IMPORTED_MODULE_6___default()()}`
+    };
     dispatch({
       type: "add",
-      payload: {
-        id: nanoid__WEBPACK_IMPORTED_MODULE_11___default()(),
-        name,
-        completed: false,
-        createdAt: `${_babel_runtime_corejs2_core_js_date_now__WEBPACK_IMPORTED_MODULE_6___default()()}`
-      }
+      payload: todo
     });
     dispatch({
       type: "set-current",
       payload: ""
     });
+
+    try {
+      await _aws_amplify_api__WEBPACK_IMPORTED_MODULE_12___default.a.graphql(Object(_aws_amplify_api__WEBPACK_IMPORTED_MODULE_12__["graphqlOperation"])(_src_graphql_mutations__WEBPACK_IMPORTED_MODULE_13__["createTodo"], {
+        input: _objectSpread({}, todo, {
+          todoTodoListId: "global",
+          userId: MY_ID
+        })
+      }));
+    } catch (err) {
+      dispatch({
+        type: "set-current",
+        payload: todo.name
+      });
+    }
   };
 
   const edit = todo => {
@@ -343,19 +367,19 @@ const App = () => {
   return __jsx(react__WEBPACK_IMPORTED_MODULE_9__["Fragment"], null, __jsx("header", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 77
+      lineNumber: 93
     },
     __self: undefined
   }, __jsx("h2", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 78
+      lineNumber: 94
     },
     __self: undefined
   }, "To Do List")), __jsx("main", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 80
+      lineNumber: 96
     },
     __self: undefined
   }, __jsx("form", {
@@ -365,7 +389,7 @@ const App = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 81
+      lineNumber: 97
     },
     __self: undefined
   }, __jsx("input", {
@@ -379,27 +403,27 @@ const App = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 87
+      lineNumber: 103
     },
     __self: undefined
   }), __jsx("button", {
     type: "submit",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 94
+      lineNumber: 110
     },
     __self: undefined
   }, "Add")), __jsx("ul", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 96
+      lineNumber: 112
     },
     __self: undefined
   }, state.todos.map(todo => __jsx("li", {
     key: todo.id,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 98
+      lineNumber: 114
     },
     __self: undefined
   }, __jsx("input", {
@@ -412,7 +436,7 @@ const App = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 99
+      lineNumber: 115
     },
     __self: undefined
   }), __jsx("button", {
@@ -421,7 +445,7 @@ const App = () => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 106
+      lineNumber: 122
     },
     __self: undefined
   }, "Delete"))))));
@@ -431,7 +455,168 @@ const App = () => {
 
 /***/ }),
 
-/***/ 4:
+/***/ "./src/aws-exports.js":
+/*!****************************!*\
+  !*** ./src/aws-exports.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// WARNING: DO NOT EDIT. This file is automatically generated by AWS Amplify. It will be overwritten.
+const awsmobile = {
+  "aws_project_region": "ap-southeast-2",
+  "aws_appsync_graphqlEndpoint": "https://znn7zaivtnhunfxqlhmoge77qq.appsync-api.ap-southeast-2.amazonaws.com/graphql",
+  "aws_appsync_region": "ap-southeast-2",
+  "aws_appsync_authenticationType": "API_KEY",
+  "aws_appsync_apiKey": "da2-2hl52cawobbsvaah2pixmpxzs4"
+};
+/* harmony default export */ __webpack_exports__["default"] = (awsmobile);
+
+/***/ }),
+
+/***/ "./src/graphql/mutations.ts":
+/*!**********************************!*\
+  !*** ./src/graphql/mutations.ts ***!
+  \**********************************/
+/*! exports provided: createTodo, updateTodo, deleteTodo, createTodoList, updateTodoList, deleteTodoList */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTodo", function() { return createTodo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateTodo", function() { return updateTodo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteTodo", function() { return deleteTodo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTodoList", function() { return createTodoList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateTodoList", function() { return updateTodoList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteTodoList", function() { return deleteTodoList; });
+// tslint:disable
+// this is an auto generated file. This will be overwritten
+const createTodo = `mutation CreateTodo(
+  $input: CreateTodoInput!
+  $condition: ModelTodoConditionInput
+) {
+  createTodo(input: $input, condition: $condition) {
+    id
+    name
+    createdAt
+    completed
+    todoList {
+      id
+      createdAt
+      todos {
+        nextToken
+      }
+    }
+    userId
+  }
+}
+`;
+const updateTodo = `mutation UpdateTodo(
+  $input: UpdateTodoInput!
+  $condition: ModelTodoConditionInput
+) {
+  updateTodo(input: $input, condition: $condition) {
+    id
+    name
+    createdAt
+    completed
+    todoList {
+      id
+      createdAt
+      todos {
+        nextToken
+      }
+    }
+    userId
+  }
+}
+`;
+const deleteTodo = `mutation DeleteTodo(
+  $input: DeleteTodoInput!
+  $condition: ModelTodoConditionInput
+) {
+  deleteTodo(input: $input, condition: $condition) {
+    id
+    name
+    createdAt
+    completed
+    todoList {
+      id
+      createdAt
+      todos {
+        nextToken
+      }
+    }
+    userId
+  }
+}
+`;
+const createTodoList = `mutation CreateTodoList(
+  $input: CreateTodoListInput!
+  $condition: ModelTodoListConditionInput
+) {
+  createTodoList(input: $input, condition: $condition) {
+    id
+    createdAt
+    todos {
+      items {
+        id
+        name
+        createdAt
+        completed
+        userId
+      }
+      nextToken
+    }
+  }
+}
+`;
+const updateTodoList = `mutation UpdateTodoList(
+  $input: UpdateTodoListInput!
+  $condition: ModelTodoListConditionInput
+) {
+  updateTodoList(input: $input, condition: $condition) {
+    id
+    createdAt
+    todos {
+      items {
+        id
+        name
+        createdAt
+        completed
+        userId
+      }
+      nextToken
+    }
+  }
+}
+`;
+const deleteTodoList = `mutation DeleteTodoList(
+  $input: DeleteTodoListInput!
+  $condition: ModelTodoListConditionInput
+) {
+  deleteTodoList(input: $input, condition: $condition) {
+    id
+    createdAt
+    todos {
+      items {
+        id
+        name
+        createdAt
+        completed
+        userId
+      }
+      nextToken
+    }
+  }
+}
+`;
+
+/***/ }),
+
+/***/ 3:
 /*!*******************************!*\
   !*** multi ./pages/index.tsx ***!
   \*******************************/
@@ -440,6 +625,17 @@ const App = () => {
 
 module.exports = __webpack_require__(/*! /Users/matthewburfield/Development/tickets/pages/index.tsx */"./pages/index.tsx");
 
+
+/***/ }),
+
+/***/ "@aws-amplify/api":
+/*!***********************************!*\
+  !*** external "@aws-amplify/api" ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@aws-amplify/api");
 
 /***/ }),
 

@@ -1,6 +1,12 @@
 import * as React from "react";
 import product, { produce } from "immer";
 import nanoid from "nanoid";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { createTodo } from "../src/graphql/mutations";
+import config from "../src/aws-exports";
+
+API.configure(config);
+const MY_ID = nanoid();
 
 type Todo = {
   id: string;
@@ -54,17 +60,27 @@ const App = () => {
     currentTodo: "",
     todos: []
   });
-  const add = (name: string) => {
+  const add = async (name: string) => {
+    const todo = {
+      id: nanoid(),
+      name,
+      completed: false,
+      createdAt: `${Date.now()}`
+    };
     dispatch({
       type: "add",
-      payload: {
-        id: nanoid(),
-        name,
-        completed: false,
-        createdAt: `${Date.now()}`
-      }
+      payload: todo
     });
     dispatch({ type: "set-current", payload: "" });
+    try {
+      await API.graphql(
+        graphqlOperation(createTodo, {
+          input: { ...todo, todoTodoListId: "global", userId: MY_ID }
+        })
+      );
+    } catch (err) {
+      dispatch({ type: "set-current", payload: todo.name });
+    }
   };
   const edit = (todo: Todo) => {
     dispatch({ type: "update", payload: todo });

@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Matthew-Burfield/tickets#readme",
   "dependencies": {
+    "@aws-amplify/api": "2.1.2",
+    "@aws-amplify/pubsub": "2.1.2",
     "immer": "5.1.0",
     "nanoid": "2.1.8",
     "next": "9.1.6",
